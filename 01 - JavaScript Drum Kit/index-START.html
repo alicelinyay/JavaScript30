@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
 
@@ -58,10 +60,51 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
 
-</script>
+    function playSound(dataKey) {
+      const audioEl = document.querySelector(`audio[data-key="${dataKey}"]`);
+      audioEl.currentTime = 0;
+      audioEl.play();
+    }
+
+    function startKeyBoardPlayingSound(event) {
+      const key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
+      if (!key) return;
+      key.classList.add('playing');
+      playSound(event.keyCode);
+    }
+
+    function endKeyBoardPlayingSound(event) {
+      const key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
+      if (!key) return;
+      key.classList.remove('playing');
+    }
+
+    function onClickPlaySoundButton(event) {
+      const key = event.target.closest('.key');
+      if (!key) return;
+      const dataKey = key.getAttribute('data-key');
+      key.classList.add('playing');
+      playSound(dataKey);
+      setTimeout(() => {
+        key.classList.remove('playing');
+      }, 100);
+    }
+    document.addEventListener('keydown', function (event) {
+      startKeyBoardPlayingSound(event)
+    });
+    document.addEventListener('keyup', function (event) {
+      endKeyBoardPlayingSound(event)
+    });
+    document.querySelectorAll('div[data-key]').forEach(element => {
+      element.addEventListener('mousedown', onClickPlaySoundButton);
+      element.addEventListener('touchdown', onClickPlaySoundButton);
+    })
+
+  </script>
 
 
 </body>
+
 </html>
